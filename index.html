@@ -2,35 +2,69 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Downloader TikTok</title>
+  <title>TikTok Downloader</title>
+
   <style>
     body {
-      font-family: Arial;
+      font-family: Arial, sans-serif;
       text-align: center;
-      padding: 50px;
-      background: #111;
+      padding: 40px;
+      background: #0f0f0f;
       color: white;
     }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
     input {
-      padding: 10px;
+      padding: 12px;
       width: 300px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
     }
+
     button {
-      padding: 10px;
+      padding: 12px 20px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 8px;
+      background: #00ffcc;
+      color: black;
       cursor: pointer;
+      font-weight: bold;
     }
+
+    button:hover {
+      background: #00ccaa;
+    }
+
+    #result {
+      margin-top: 25px;
+    }
+
     video {
-      margin-top: 20px;
       width: 300px;
+      border-radius: 10px;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 10px;
+      color: #00ffcc;
+      text-decoration: none;
+      font-weight: bold;
     }
   </style>
 </head>
+
 <body>
 
-<h2>TikTok Downloader No Watermark</h2>
+<h2>🔥 TikTok Downloader No Watermark</h2>
 
-<input type="text" id="link" placeholder="Masukkan link TikTok">
-<br><br>
+<input type="text" id="link" placeholder="Paste link TikTok di sini">
+<br>
 <button onclick="download()">Download</button>
 
 <div id="result"></div>
@@ -44,28 +78,43 @@ async function download() {
     return;
   }
 
-  document.getElementById("result").innerHTML = "Loading...";
+  document.getElementById("result").innerHTML = "⏳ Loading...";
 
-  try {
-    const apiUrl = `https://api.tikwm.com/?url=${encodeURIComponent(url)}`;
-    const proxy = `https://corsproxy.io/?${apiUrl}`;
+  const apis = [
+    `https://corsproxy.io/?https://api.tikwm.com/?url=${encodeURIComponent(url)}`,
+    `https://corsproxy.io/?https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}`
+  ];
 
-    const res = await fetch(proxy);
-    const data = await res.json();
+  for (let api of apis) {
+    try {
+      const res = await fetch(api);
+      const data = await res.json();
 
-    if (data && data.data && data.data.play) {
-      document.getElementById("result").innerHTML = `
-        <video controls src="${data.data.play}"></video>
-        <br><br>
-        <a href="${data.data.play}" download>Download Video</a>
-      `;
-    } else {
-      document.getElementById("result").innerHTML = "Gagal ambil video 😢";
+      let video = null;
+
+      if (data?.data?.play) {
+        video = data.data.play;
+      }
+
+      if (data?.video) {
+        video = data.video;
+      }
+
+      if (video) {
+        document.getElementById("result").innerHTML = `
+          <video controls src="${video}"></video>
+          <br>
+          <a href="${video}" download>⬇️ Download Video</a>
+        `;
+        return;
+      }
+
+    } catch (err) {
+      console.log("API gagal, coba berikutnya...");
     }
-
-  } catch (err) {
-    document.getElementById("result").innerHTML = "Error / API kena block 😭";
   }
+
+  document.getElementById("result").innerHTML = "❌ Semua API gagal, coba link lain";
 }
 </script>
 
