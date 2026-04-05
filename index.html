@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Downloader TikTok</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      padding: 50px;
+      background: #111;
+      color: white;
+    }
+    input {
+      padding: 10px;
+      width: 300px;
+    }
+    button {
+      padding: 10px;
+      cursor: pointer;
+    }
+    video {
+      margin-top: 20px;
+      width: 300px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>TikTok Downloader No Watermark</h2>
+
+<input type="text" id="link" placeholder="Masukkan link TikTok">
+<br><br>
+<button onclick="download()">Download</button>
+
+<div id="result"></div>
+
+<script>
+async function download() {
+  const url = document.getElementById("link").value;
+
+  const api = `https://api.tiklydown.eu.org/api/download?url=${url}`;
+
+  const res = await fetch(api);
+  const data = await res.json();
+
+  if (data.video) {
+    document.getElementById("result").innerHTML = `
+      <video controls src="${data.video}"></video>
+      <br>
+      <a href="${data.video}" download>Download Video</a>
+    `;
+  } else {
+    alert("Gagal ambil video!");
+  }
+}
+</script>
+
+</body>
+</html>
