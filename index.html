@@ -39,19 +39,28 @@
 async function download() {
   const url = document.getElementById("link").value;
 
-  const api = `https://api.tiklydown.eu.org/api/download?url=${url}`;
+  if (!url) {
+    alert("Masukkan link dulu!");
+    return;
+  }
 
-  const res = await fetch(api);
-  const data = await res.json();
+  document.getElementById("result").innerHTML = "Loading...";
 
-  if (data.video) {
-    document.getElementById("result").innerHTML = `
-      <video controls src="${data.video}"></video>
-      <br>
-      <a href="${data.video}" download>Download Video</a>
-    `;
-  } else {
-    alert("Gagal ambil video!");
+  try {
+    const res = await fetch(`https://api.tikwm.com/?url=${url}`);
+    const data = await res.json();
+
+    if (data && data.data && data.data.play) {
+      document.getElementById("result").innerHTML = `
+        <video controls src="${data.data.play}"></video>
+        <br><br>
+        <a href="${data.data.play}" download>Download Video</a>
+      `;
+    } else {
+      document.getElementById("result").innerHTML = "Gagal ambil video 😢";
+    }
+  } catch (err) {
+    document.getElementById("result").innerHTML = "Error API / kena block 😭";
   }
 }
 </script>
