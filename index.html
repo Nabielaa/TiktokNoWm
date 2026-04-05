@@ -47,7 +47,10 @@ async function download() {
   document.getElementById("result").innerHTML = "Loading...";
 
   try {
-    const res = await fetch(`https://api.tikwm.com/?url=${url}`);
+    const apiUrl = `https://api.tikwm.com/?url=${encodeURIComponent(url)}`;
+    const proxy = `https://corsproxy.io/?${apiUrl}`;
+
+    const res = await fetch(proxy);
     const data = await res.json();
 
     if (data && data.data && data.data.play) {
@@ -59,8 +62,9 @@ async function download() {
     } else {
       document.getElementById("result").innerHTML = "Gagal ambil video 😢";
     }
+
   } catch (err) {
-    document.getElementById("result").innerHTML = "Error API / kena block 😭";
+    document.getElementById("result").innerHTML = "Error / API kena block 😭";
   }
 }
 </script>
