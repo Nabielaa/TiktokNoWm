@@ -70,7 +70,7 @@
 <div id="result"></div>
 
 <script>
-async function download() {
+function download() {
   const url = document.getElementById("link").value;
 
   if (!url) {
@@ -78,43 +78,8 @@ async function download() {
     return;
   }
 
-  document.getElementById("result").innerHTML = "⏳ Loading...";
-
-  const apis = [
-    `https://corsproxy.io/?https://api.tikwm.com/?url=${encodeURIComponent(url)}`,
-    `https://corsproxy.io/?https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}`
-  ];
-
-  for (let api of apis) {
-    try {
-      const res = await fetch(api);
-      const data = await res.json();
-
-      let video = null;
-
-      if (data?.data?.play) {
-        video = data.data.play;
-      }
-
-      if (data?.video) {
-        video = data.video;
-      }
-
-      if (video) {
-        document.getElementById("result").innerHTML = `
-          <video controls src="${video}"></video>
-          <br>
-          <a href="${video}" download>⬇️ Download Video</a>
-        `;
-        return;
-      }
-
-    } catch (err) {
-      console.log("API gagal, coba berikutnya...");
-    }
-  }
-
-  document.getElementById("result").innerHTML = "❌ Semua API gagal, coba link lain";
+  // redirect ke downloader luar (pasti work)
+  window.open(`https://snaptik.app/en?url=${encodeURIComponent(url)}`, '_blank');
 }
 </script>
 
